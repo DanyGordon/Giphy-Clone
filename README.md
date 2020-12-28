@@ -1,4 +1,5 @@
-# gifty
+# Giphy-Clone
+Gif Searcher with Vue and the Giphy API
 
 ## Project setup
 ```
