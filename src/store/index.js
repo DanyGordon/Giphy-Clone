@@ -16,7 +16,6 @@ export default new Vuex.Store({
     SAVE_GIFS: function (state, payload) {
       state.gifs = payload.data;
       state.pagination = payload.pagination;
-      console.log(state.gifs[0].user)
     },
 
     UPLOAD_GIFS: function (state, payload) {
