@@ -50,10 +50,16 @@
       Upload more gifs
       </button>
     </div>
-    <div class="modal__wrapper" style="display: none" v-on:click.self="closeModal()">
-      <div class="modal__close" v-on:click.prevent="closeModal()"></div>
-      <div class="modal__content" id="modal"></div>
-    </div>
+    <transition name="fade">
+      <div class="modal__wrapper" v-show="isModal" v-on:click.self="closeModal()">
+        <div class="modal__close" v-on:click.prevent="closeModal()"></div>
+        <transition name="fadeModal">
+          <div class="modal__content" id="modal" v-if="isModal">
+            <img v-bind:src="modalImage" v-bind:alt="modalAlt" class="modal__image">
+          </div>
+        </transition>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -64,25 +70,9 @@ export default {
   name: 'gifs',
   data: function () {
     return {
-      modal: {
-        windowContent: function (params) {
-          if (params) {
-            document.getElementById('modal').innerHTML = 
-            `<img src="${params.src}" alt="${params.alt}" class="modal__image">`;
-          } else {
-            document.getElementById('modal').innerHTML = '';
-          }
-        },
-        wrapperState: function (state) {
-          document.querySelector('.modal__wrapper').setAttribute('style', `display: ${state}`);
-        },
-        params: function (image) {
-          return {
-            src: image.getAttribute('src'),
-            alt: image.getAttribute('alt')
-          }
-        }
-      }
+      isModal: false,
+      modalImage: '',
+      modalAlt: '',
     }
   },
   methods: {
@@ -92,15 +82,18 @@ export default {
     },
 
     displayModal: function (id) {
-      let image = document.getElementById(id),
-      params = this.modal.params(image);
-      this.modal.windowContent(params);
-      this.modal.wrapperState('flex');
+      this.isModal = true;
+      let image = document.getElementById(id);
+      this.setParams(image);
     },
 
     closeModal: function () {
-      this.modal.windowContent();
-      this.modal.wrapperState('none');
+      this.isModal = false;
+    },
+
+    setParams: function (image) {
+      this.modalImage = image.getAttribute('src');
+      this.modalAlt = image.getAttribute('alt');
     }
   },
   computed: {
@@ -276,7 +269,6 @@ export default {
   position: relative;
   width: 450px;
   margin: 0 auto;
-  animation: fadeIn .5s forwards ease-in-out;
 
   @media screen and (max-width: 450px){
     width: 95%;
@@ -290,9 +282,28 @@ export default {
   }
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .7s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.fadeModal-enter-active {
+  animation: fadeIn .5s forwards ease-in-out;
+}
+.fadeModal-leave-active {
+  animation: fadeOut .5s forwards ease-in-out;
+} 
+
 @keyframes fadeIn {
   0% { transform: scale(0.1); }
   100% { transform: scale(1); }
+}
+
+@keyframes fadeOut {
+  0% { transform: scale(1); }
+  100% { transform: scale(0.1); }
 }
 
 </style>
