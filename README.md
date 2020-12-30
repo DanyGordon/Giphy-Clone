@@ -25,6 +25,5 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Set your API key from Giphy
-```
 Set your API key from Giphy in config.js in src/config.js
-```
+
